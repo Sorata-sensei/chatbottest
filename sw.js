@@ -1,84 +1,74 @@
-const CACHE_NAME = "paylater-v1";
-const OFFLINE_URL = "offline.html";
+const CACHE_NAME = "pwa-template-v2";
+const BASE_URL = self.registration.scope;
 
 const urlsToCache = [
-    "./",
-    "index.html",
-    "offline.html",
-    "manifest.json",
-    "app.js",
-    "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css",
-    "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js",
-    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  `${BASE_URL}`,
+  `${BASE_URL}index.html`,
+  `${BASE_URL}offline.html`,
+  `${BASE_URL}assets/style.css`,
+  `${BASE_URL}manifest.json`,
+  `${BASE_URL}icons/icon-192x192.png`,
+  `${BASE_URL}icons/icon-512x512.png`,
 ];
 
-// Install Event
-self.addEventListener("install", (event) => {
-    event.waitUntil(
-        (async () => {
-            try {
-                const cache = await caches.open(CACHE_NAME);
-                await cache.addAll(urlsToCache);
-                await self.skipWaiting();
-            } catch (error) {
-                console.error("Cache installation failed:", error);
-            }
-        })()
-    );
+// Install Service Worker & simpan file ke cache
+self.addEventListener("install", event => {
+  self.skipWaiting(); // langsung aktif tanpa reload manual
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(urlsToCache))
+      .catch(err => console.error("Cache gagal dimuat:", err))
+  );
 });
 
-// Activate Event
-self.addEventListener("activate", (event) => {
-    event.waitUntil(
-        (async () => {
-            const cacheNames = await caches.keys();
-            await Promise.all(
-                cacheNames.map((cacheName) => {
-                    if (cacheName !== CACHE_NAME) {
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
-            await self.clients.claim();
-        })()
-    );
+// Aktivasi dan hapus cache lama
+self.addEventListener("activate", event => {
+  event.waitUntil(
+    (async () => {
+      const keys = await caches.keys();
+      await Promise.all(
+        keys.map(key => {
+          if (key !== CACHE_NAME) {
+            console.log("Menghapus cache lama:", key);
+            return caches.delete(key);
+          }
+        })
+      );
+      await self.clients.claim(); // langsung klaim kontrol ke halaman
+    })()
+  );
 });
 
-// Fetch Event
-self.addEventListener("fetch", (event) => {
-    const { request } = event;
+// Fetch event: cache-first untuk file lokal, network-first untuk API
+self.addEventListener("fetch", event => {
+  const request = event.request;
+  const url = new URL(request.url);
 
-    if (request.method !== "GET") return;
+  // Abaikan permintaan Chrome Extension, analytics, dll.
+  if (url.protocol.startsWith("chrome-extension")) return;
+  if (request.method !== "GET") return;
 
-    if (request.mode === "navigate") {
-        event.respondWith(
-            (async () => {
-                try {
-                    const networkResponse = await fetch(request);
-                    const cache = await caches.open(CACHE_NAME);
-                    cache.put(request, networkResponse.clone());
-                    return networkResponse;
-                } catch (error) {
-                    return (await caches.match(request)) || caches.match(OFFLINE_URL);
-                }
-            })()
-        );
-        return;
-    }
-
+  // File lokal (statis)
+  if (url.origin === self.location.origin) {
     event.respondWith(
-        (async () => {
-            const cached = await caches.match(request);
-            if (cached) return cached;
-
-            try {
-                const networkResponse = await fetch(request);
-                const cache = await caches.open(CACHE_NAME);
-                cache.put(request, networkResponse.clone());
-                return networkResponse;
-            } catch (error) {
-                return caches.match(OFFLINE_URL);
-            }
-        })()
+      caches.match(request).then(response => {
+        return (
+          response ||
+          fetch(request).catch(() => caches.match(`${BASE_URL}offline.html`))
+        );
+      })
     );
+  } 
+  // Resource eksternal (API, CDN, dsb.)
+  else {
+    event.respondWith(
+      fetch(request)
+        .then(networkResponse => {
+          const clone = networkResponse.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
+          return networkResponse;
+        })
+        .catch(() => caches.match(request))
+    );
+  }
 });
