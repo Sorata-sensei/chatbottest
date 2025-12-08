@@ -1,54 +1,53 @@
 {
-  "id": "./",
-  "name": "PWA Template Responsif",
-  "short_name": "PWA Demo",
-  "description": "Aplikasi PWA responsif untuk demonstrasi template dasar Progressive Web App dengan dukungan offline dan installable.",
-  "start_url": "./index.html",
-  "scope": "./",
+  "id": "/",
+  "name": "PayLater - Aplikasi Hutang",
+  "short_name": "PayLater",
+  "description": "Aplikasi hutang untuk mahasiswa - kelola catatan hutang dengan mudah",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#4F46E5",
   "theme_color": "#4F46E5",
-  "orientation": "portrait",
+  "orientation": "any",
   "lang": "id",
+  "dir": "ltr",
   "icons": [
     {
-      "src": "icons/icon-192x192-A.png",
+      "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "icons/icon-512x512-B.png",
+      "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "icons/screenshot1.png",
-      "sizes": "1080x1920",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "icons/screenshot2.png",
-      "sizes": "1080x1920",
-      "type": "image/png"
-    }
-  ],
-  "shortcuts": [
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
     {
-      "name": "Buka Beranda",
-      "short_name": "Home",
-      "url": "./index.html",
-      "icons": [
-        {
-          "src": "icons/icon-192x192-A.png",
-          "sizes": "192x192"
-        }
-      ]
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
   "categories": [
     "productivity",
-    "utilities"
+    "utilities",
+    "finance"
+  ],
+  "prefer_related_applications": false,
+  "screenshots": [
+    {
+      "src": "/screenshots/screenshot1.png",
+      "sizes": "540x720",
+      "type": "image/png"
+    }
   ]
 }

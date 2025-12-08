@@ -4,840 +4,344 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#6366f1">
-    <title>Notes - Pencatatan Pengeluaran</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
-    <link rel="manifest" href="manifest.json" />
+    <meta name="description" content="aplikasi hutang">
+    <meta name="theme-color" content="#4F46E5">
+    <title>PayLater - Aplikasi Hutang</title>
+
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/png" href="/icons/icon-192x192.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         :root {
-            --primary: #6366f1;
-            --secondary: #8b5cf6;
-            --success: #10b981;
+            --primary: #4F46E5;
             --danger: #ef4444;
+            --success: #10b981;
             --warning: #f59e0b;
-            --dark: #1f2937;
-            --light: #f9fafb;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+        }
+
+        .gradient-bg {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
         }
 
-        .auth-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .auth-card {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 450px;
-            width: 100%;
-            overflow: hidden;
-        }
-
-        .auth-header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-
-        .auth-header h2 {
-            margin: 0;
-            font-weight: 700;
-        }
-
-        .auth-body {
-            padding: 30px;
-        }
-
-        .form-control:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            border: none;
-            padding: 12px;
-            font-weight: 600;
-            transition: transform 0.2s;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
-        }
-
-        .app-container {
-            display: none;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .app-header {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .app-header h1 {
-            color: var(--primary);
-            margin: 0;
-            font-weight: 700;
-            font-size: 1.8rem;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .user-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-
-        .expense-card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .expense-item {
-            background: var(--light);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .card-hover {
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .expense-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
-        .expense-info h5 {
-            margin: 0;
-            color: var(--dark);
-            font-weight: 600;
-        }
-
-        .expense-info p {
-            margin: 5px 0 0 0;
-            color: #6b7280;
-            font-size: 0.9rem;
-        }
-
-        .expense-amount {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--danger);
-        }
-
-        .expense-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn-sm {
-            padding: 5px 12px;
-        }
-
-        .total-card {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        .btn-primary-custom {
+            background-color: var(--primary);
+            border: none;
             color: white;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-            text-align: center;
         }
 
-        .total-amount {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin: 10px 0;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 50px 20px;
-            color: #9ca3af;
-        }
-
-        .empty-state i {
-            font-size: 4rem;
-            margin-bottom: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .app-header h1 {
-                font-size: 1.5rem;
-            }
-
-            .expense-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-
-            .expense-actions {
-                width: 100%;
-                justify-content: flex-end;
-            }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.3s ease-in;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .profile-card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .profile-header {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .profile-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .btn-primary-custom:hover {
+            background-color: #4338ca;
             color: white;
-            font-weight: bold;
-            font-size: 2rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .navbar-custom {
+            background-color: var(--primary);
+        }
+
+        .stat-card {
+            border-radius: 10px;
+            border: none;
+        }
+
+        .badge-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .debt-item {
+            transition: background-color 0.2s;
+        }
+
+        .debt-item:hover {
+            background-color: #f8f9fa;
         }
     </style>
 </head>
 
 <body>
+
     <!-- Login Page -->
-    <div id="loginPage" class="auth-container">
-        <div class="auth-card fade-in">
-            <div class="auth-header">
-                <i class="fas fa-wallet fa-3x mb-3"></i>
-                <h2>Notes</h2>
-                <p class="mb-0">Pencatatan Pengeluaran Harian</p>
-            </div>
-            <div class="auth-body">
-                <form id="loginForm">
-                    <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" id="loginEmail" required>
+    <div id="loginPage" class="min-vh-100 d-flex align-items-center justify-content-center gradient-bg">
+        <div class="card shadow-lg" style="max-width: 400px; width: 100%; margin: 20px;">
+            <div class="card-body p-4">
+                <h2 class="text-center mb-2 fw-bold" style="color: var(--primary);">
+                    <i class="fas fa-wallet me-2"></i>PayLater
+                </h2>
+                <p class="text-center text-muted mb-4">Kelola hutang dengan mudah</p>
+
+                <div id="loginError" class="alert alert-danger py-2 hidden"></div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Email</label>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="email@example.com">
+                    <div class="invalid-feedback"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Password</label>
+                    <div class="input-group">
+                        <input type="password" id="loginPassword" class="form-control" placeholder="Min. 6 karakter">
+                        <button class="btn btn-outline-secondary" type="button" id="toggleLoginPassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Password</label>
-                        <input type="password" class="form-control" id="loginPassword" required>
-                    </div>
-                    <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="rememberMe">
-                        <label class="form-check-label" for="rememberMe">Remember Me</label>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">
-                        <i class="fas fa-sign-in-alt me-2"></i>Login
-                    </button>
-                </form>
-                <div class="text-center mt-3">
-                    <p class="mb-0">Belum punya akun? <a href="#" id="showRegister" class="text-decoration-none">Daftar
-                            di sini</a></p>
+                    <div class="invalid-feedback"></div>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input type="checkbox" class="form-check-input" id="rememberMe">
+                    <label class="form-check-label" for="rememberMe">Remember Me</label>
+                </div>
+
+                <button id="loginBtn" class="btn btn-primary-custom w-100 mb-3">
+                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                </button>
+
+                <div class="text-center">
+                    <span class="text-muted">Belum punya akun? </span>
+                    <button class="btn btn-link p-0" id="goToRegister">Daftar sekarang</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Register Page -->
-    <div id="registerPage" class="auth-container" style="display: none;">
-        <div class="auth-card fade-in">
-            <div class="auth-header">
-                <i class="fas fa-user-plus fa-3x mb-3"></i>
-                <h2>Daftar Akun</h2>
-                <p class="mb-0">Buat akun baru untuk memulai</p>
-            </div>
-            <div class="auth-body">
-                <form id="registerForm">
-                    <div class="mb-3">
-                        <label class="form-label">Nama Lengkap</label>
-                        <input type="text" class="form-control" id="registerName" required>
+    <div id="registerPage" class="min-vh-100 d-flex align-items-center justify-content-center gradient-bg hidden">
+        <div class="card shadow-lg" style="max-width: 400px; width: 100%; margin: 20px;">
+            <div class="card-body p-4">
+                <h2 class="text-center mb-4 fw-bold" style="color: var(--primary);">Daftar Akun</h2>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Nama Lengkap</label>
+                    <input type="text" id="registerName" class="form-control" placeholder="Nama lengkap">
+                    <div class="invalid-feedback"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Email</label>
+                    <input type="email" id="registerEmail" class="form-control" placeholder="email@example.com">
+                    <div class="invalid-feedback"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Password</label>
+                    <div class="input-group">
+                        <input type="password" id="registerPassword" class="form-control" placeholder="Min. 6 karakter">
+                        <button class="btn btn-outline-secondary" type="button" id="toggleRegisterPassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" id="registerEmail" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Password (minimal 6 karakter)</label>
-                        <input type="password" class="form-control" id="registerPassword" required minlength="6">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Konfirmasi Password</label>
-                        <input type="password" class="form-control" id="confirmPassword" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">
-                        <i class="fas fa-user-plus me-2"></i>Daftar
-                    </button>
-                </form>
-                <div class="text-center mt-3">
-                    <p class="mb-0">Sudah punya akun? <a href="#" id="showLogin" class="text-decoration-none">Login di
-                            sini</a></p>
+                    <div class="invalid-feedback"></div>
+                </div>
+
+                <button id="registerBtn" class="btn btn-primary-custom w-100 mb-3">
+                    <i class="fas fa-user-plus me-2"></i>Daftar
+                </button>
+
+                <div class="text-center">
+                    <span class="text-muted">Sudah punya akun? </span>
+                    <button class="btn btn-link p-0" id="goToLogin">Login</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- App Container -->
-    <div id="appContainer" class="app-container">
-        <!-- Header -->
-        <div class="app-header">
-            <h1><i class="fas fa-wallet me-2"></i>Notes</h1>
-            <div class="user-info">
-                <div class="user-avatar" id="userAvatar"></div>
-                <div>
-                    <div class="fw-bold" id="userName"></div>
-                    <small class="text-muted" id="userEmail"></small>
-                </div>
-                <div class="dropdown">
-                    <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                        <i class="fas fa-bars"></i>
+    <!-- Dashboard -->
+    <div id="dashboardPage" class="min-vh-100 hidden">
+        <nav class="navbar navbar-custom shadow-sm">
+            <div class="container-fluid">
+                <span class="navbar-brand text-white fw-bold">
+                    <i class="fas fa-wallet me-2"></i>PayLater
+                </span>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-light btn-sm" id="goToProfile">
+                        <i class="fas fa-user me-1"></i>Profile
                     </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#" id="showProfile"><i
-                                    class="fas fa-user me-2"></i>Profile</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item text-danger" href="#" id="logoutBtn"><i
-                                    class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
-                    </ul>
+                    <button class="btn btn-danger btn-sm" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt me-1"></i>Logout
+                    </button>
                 </div>
             </div>
-        </div>
+        </nav>
 
-        <!-- Main Page -->
-        <div id="mainPage">
-            <!-- Total Card -->
-            <div class="total-card">
-                <h3>Total Pengeluaran</h3>
-                <div class="total-amount" id="totalAmount">Rp 0</div>
-                <small>Bulan ini</small>
-            </div>
-
-            <!-- Add Expense Form -->
-            <div class="expense-card">
-                <h4 class="mb-4"><i class="fas fa-plus-circle me-2"></i>Tambah Pengeluaran</h4>
-                <form id="expenseForm">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Kategori</label>
-                            <input type="text" class="form-control" id="expenseCategory"
-                                placeholder="Makanan, Transport, dll" required>
+        <div class="container py-4">
+            <!-- Statistics -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="card stat-card text-white shadow card-hover" style="background-color: var(--danger);">
+                        <div class="card-body">
+                            <h6 class="card-title"><i class="fas fa-exclamation-circle me-2"></i>Total Hutang</h6>
+                            <h3 class="mb-0" id="totalDebt">Rp 0</h3>
+                            <small id="unpaidCount">0 hutang belum lunas</small>
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Jumlah (Rp)</label>
-                            <input type="number" class="form-control" id="expenseAmount" placeholder="50000" required>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label">Keterangan</label>
-                            <textarea class="form-control" id="expenseNote" rows="2" placeholder="Opsional"></textarea>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Tanggal</label>
-                            <input type="date" class="form-control" id="expenseDate" required>
-                        </div>
-                        <div class="col-md-6 d-flex align-items-end">
-                            <button type="submit" class="btn btn-primary w-100" id="submitBtn">
-                                <i class="fas fa-save me-2"></i>Simpan
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Expense List -->
-            <div class="expense-card">
-                <h4 class="mb-4"><i class="fas fa-list me-2"></i>Daftar Pengeluaran</h4>
-                <div id="expenseList"></div>
-            </div>
-        </div>
-
-        <!-- Profile Page -->
-        <div id="profilePage" style="display: none;">
-            <div class="profile-card">
-                <div class="profile-header">
-                    <div class="profile-avatar" id="profileAvatar"></div>
-                    <div>
-                        <h3 class="mb-1" id="profileName"></h3>
-                        <p class="text-muted mb-0" id="profileEmail"></p>
                     </div>
                 </div>
-                <form id="profileForm">
-                    <div class="mb-3">
-                        <label class="form-label">Nama Lengkap</label>
-                        <input type="text" class="form-control" id="profileNameInput" required>
+                <div class="col-md-4">
+                    <div class="card stat-card text-white shadow card-hover" style="background-color: var(--success);">
+                        <div class="card-body">
+                            <h6 class="card-title"><i class="fas fa-check-circle me-2"></i>Sudah Lunas</h6>
+                            <h3 class="mb-0" id="paidDebt">Rp 0</h3>
+                            <small id="paidCount">0 hutang lunas</small>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" id="profileEmailInput" required>
+                </div>
+                <div class="col-md-4">
+                    <div class="card stat-card text-white shadow card-hover" style="background-color: var(--primary);">
+                        <div class="card-body">
+                            <h6 class="card-title"><i class="fas fa-list me-2"></i>Total Transaksi</h6>
+                            <h3 class="mb-0" id="totalCount">0</h3>
+                            <small>Semua catatan hutang</small>
+                        </div>
                     </div>
-                    <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-2"></i>Update Profile
+                </div>
+            </div>
+
+            <!-- Debt List -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="mb-0 fw-bold"><i class="fas fa-list-ul me-2"></i>Daftar Hutang</h5>
+                        <button class="btn btn-primary-custom btn-sm" id="goToAddDebt">
+                            <i class="fas fa-plus me-1"></i>Tambah Hutang
                         </button>
-                        <button type="button" class="btn btn-secondary" id="backToMain">
-                            <i class="fas fa-arrow-left me-2"></i>Kembali
-                        </button>
                     </div>
-                </form>
+
+                    <div id="debtList"></div>
+                </div>
             </div>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <!-- Add/Edit Debt Page -->
+    <div id="debtFormPage" class="min-vh-100 hidden">
+        <nav class="navbar navbar-custom shadow-sm">
+            <div class="container-fluid">
+                <button class="btn btn-light btn-sm" id="backToDashboard">
+                    <i class="fas fa-arrow-left me-1"></i>Kembali
+                </button>
+                <span class="navbar-brand text-white fw-bold" id="debtFormTitle">Tambah Hutang</span>
+                <div style="width: 80px;"></div>
+            </div>
+        </nav>
+
+        <div class="container py-4">
+            <div class="card shadow-sm" style="max-width: 600px; margin: 0 auto;">
+                <div class="card-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nama Kreditor</label>
+                        <input type="text" id="creditorName" class="form-control" placeholder="Nama pemberi pinjaman">
+                        <div class="invalid-feedback"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Jumlah Hutang (Rp)</label>
+                        <input type="number" id="debtAmount" class="form-control" placeholder="0">
+                        <div class="invalid-feedback"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Keterangan</label>
+                        <textarea id="debtDescription" class="form-control" rows="3"
+                            placeholder="Catatan tambahan (opsional)"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Tanggal Jatuh Tempo</label>
+                        <input type="date" id="dueDate" class="form-control">
+                        <div class="invalid-feedback"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Status</label>
+                        <select id="debtStatus" class="form-select">
+                            <option value="unpaid">Belum Lunas</option>
+                            <option value="paid">Sudah Lunas</option>
+                        </select>
+                    </div>
+
+                    <button id="saveDebtBtn" class="btn btn-primary-custom w-100">
+                        <i class="fas fa-save me-2"></i>Simpan Hutang
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Page -->
+    <div id="profilePage" class="min-vh-100 hidden">
+        <nav class="navbar navbar-custom shadow-sm">
+            <div class="container-fluid">
+                <button class="btn btn-light btn-sm" id="backToDashboardFromProfile">
+                    <i class="fas fa-arrow-left me-1"></i>Kembali
+                </button>
+                <span class="navbar-brand text-white fw-bold">Profile</span>
+                <div style="width: 80px;"></div>
+            </div>
+        </nav>
+
+        <div class="container py-4">
+            <div class="card shadow-sm" style="max-width: 600px; margin: 0 auto;">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center text-white"
+                            style="width: 80px; height: 80px; background-color: var(--primary);">
+                            <i class="fas fa-user fa-3x"></i>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nama Lengkap</label>
+                        <input type="text" id="profileName" class="form-control">
+                        <div class="invalid-feedback"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Email</label>
+                        <input type="email" id="profileEmail" class="form-control">
+                        <div class="invalid-feedback"></div>
+                    </div>
+
+                    <button id="updateProfileBtn" class="btn btn-primary-custom w-100">
+                        <i class="fas fa-save me-2"></i>Update Profile
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/app.js"></script>
+
     <script>
-        // Simple encryption functions
-        function simpleHash(str) {
-            let hash = 0;
-            for (let i = 0; i < str.length; i++) {
-                const char = str.charCodeAt(i);
-                hash = ((hash << 5) - hash) + char;
-                hash = hash & hash;
-            }
-            return hash.toString(36);
-        }
-
-        // Auth Manager
-        const AuthManager = {
-            register(name, email, password) {
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-
-                if (users.find(u => u.email === email)) {
-                    return { success: false, message: 'Email sudah terdaftar!' };
-                }
-
-                users.push({
-                    id: Date.now(),
-                    name,
-                    email,
-                    password: simpleHash(password),
-                    createdAt: new Date().toISOString()
-                });
-
-                localStorage.setItem('users', JSON.stringify(users));
-                return { success: true, message: 'Registrasi berhasil!' };
-            },
-
-            login(email, password, remember) {
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const user = users.find(u => u.email === email && u.password === simpleHash(password));
-
-                if (user) {
-                    const session = {
-                        userId: user.id,
-                        name: user.name,
-                        email: user.email,
-                        remember
-                    };
-                    localStorage.setItem('session', JSON.stringify(session));
-                    return { success: true, user: session };
-                }
-
-                return { success: false, message: 'Email atau password salah!' };
-            },
-
-            logout() {
-                localStorage.removeItem('session');
-                window.location.reload();
-            },
-
-            getSession() {
-                return JSON.parse(localStorage.getItem('session') || 'null');
-            },
-
-            updateProfile(name, email) {
-                const session = this.getSession();
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const userIndex = users.findIndex(u => u.id === session.userId);
-
-                if (userIndex !== -1) {
-                    users[userIndex].name = name;
-                    users[userIndex].email = email;
-                    localStorage.setItem('users', JSON.stringify(users));
-
-                    session.name = name;
-                    session.email = email;
-                    localStorage.setItem('session', JSON.stringify(session));
-                    return true;
-                }
-                return false;
-            }
-        };
-
-        // Expense Manager
-        const ExpenseManager = {
-            getExpenses() {
-                const session = AuthManager.getSession();
-                const allExpenses = JSON.parse(localStorage.getItem('expenses') || '[]');
-                return allExpenses.filter(e => e.userId === session.userId);
-            },
-
-            addExpense(expense) {
-                const session = AuthManager.getSession();
-                const expenses = JSON.parse(localStorage.getItem('expenses') || '[]');
-                expenses.push({
-                    id: Date.now(),
-                    userId: session.userId,
-                    ...expense,
-                    createdAt: new Date().toISOString()
-                });
-                localStorage.setItem('expenses', JSON.stringify(expenses));
-            },
-
-            updateExpense(id, expense) {
-                const expenses = JSON.parse(localStorage.getItem('expenses') || '[]');
-                const index = expenses.findIndex(e => e.id === id);
-                if (index !== -1) {
-                    expenses[index] = { ...expenses[index], ...expense };
-                    localStorage.setItem('expenses', JSON.stringify(expenses));
-                }
-            },
-
-            deleteExpense(id) {
-                const expenses = JSON.parse(localStorage.getItem('expenses') || '[]');
-                const filtered = expenses.filter(e => e.id !== id);
-                localStorage.setItem('expenses', JSON.stringify(filtered));
-            }
-        };
-
-        // UI Manager
-        const UI = {
-            showPage(pageId) {
-                ['loginPage', 'registerPage', 'appContainer'].forEach(id => {
-                    document.getElementById(id).style.display = 'none';
-                });
-                document.getElementById(pageId).style.display = pageId === 'appContainer' ? 'block' : 'flex';
-            },
-
-            showAppSection(sectionId) {
-                ['mainPage', 'profilePage'].forEach(id => {
-                    document.getElementById(id).style.display = 'none';
-                });
-                document.getElementById(sectionId).style.display = 'block';
-            },
-
-            showAlert(message, type = 'info') {
-                const alertDiv = document.createElement('div');
-                alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3`;
-                alertDiv.style.zIndex = '9999';
-                alertDiv.innerHTML = `
-                    ${message}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                `;
-                document.body.appendChild(alertDiv);
-                setTimeout(() => alertDiv.remove(), 3000);
-            },
-
-            updateUserInfo() {
-                const session = AuthManager.getSession();
-                if (session) {
-                    const initial = session.name.charAt(0).toUpperCase();
-                    document.getElementById('userAvatar').textContent = initial;
-                    document.getElementById('userName').textContent = session.name;
-                    document.getElementById('userEmail').textContent = session.email;
-                }
-            },
-
-            renderExpenses() {
-                const expenses = ExpenseManager.getExpenses();
-                const container = document.getElementById('expenseList');
-
-                if (expenses.length === 0) {
-                    container.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-inbox"></i>
-                            <h5>Belum ada pengeluaran</h5>
-                            <p>Mulai tambahkan pengeluaran harian Anda</p>
-                        </div>
-                    `;
-                    this.updateTotal(0);
-                    return;
-                }
-
-                expenses.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-                container.innerHTML = expenses.map(exp => `
-                    <div class="expense-item fade-in">
-                        <div class="expense-info">
-                            <h5><i class="fas fa-tag me-2"></i>${exp.category}</h5>
-                            <p><i class="far fa-calendar me-1"></i>${new Date(exp.date).toLocaleDateString('id-ID')}</p>
-                            ${exp.note ? `<p class="mb-0"><i class="far fa-sticky-note me-1"></i>${exp.note}</p>` : ''}
-                        </div>
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="expense-amount">Rp ${parseInt(exp.amount).toLocaleString('id-ID')}</div>
-                            <div class="expense-actions">
-                                <button class="btn btn-sm btn-warning" onclick="editExpense(${exp.id})">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn btn-sm btn-danger" onclick="deleteExpense(${exp.id})">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-
-                const total = expenses.reduce((sum, exp) => sum + parseFloat(exp.amount), 0);
-                this.updateTotal(total);
-            },
-
-            updateTotal(total) {
-                document.getElementById('totalAmount').textContent = `Rp ${total.toLocaleString('id-ID')}`;
-            }
-        };
-
-        // Event Listeners
-        document.getElementById('loginForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            const remember = document.getElementById('rememberMe').checked;
-
-            const result = AuthManager.login(email, password, remember);
-            if (result.success) {
-                UI.showAlert('Login berhasil!', 'success');
-                setTimeout(() => {
-                    UI.showPage('appContainer');
-                    UI.updateUserInfo();
-                    UI.renderExpenses();
-                }, 500);
-            } else {
-                UI.showAlert(result.message, 'danger');
-            }
-        });
-
-        document.getElementById('registerForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const name = document.getElementById('registerName').value;
-            const email = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
-            const confirm = document.getElementById('confirmPassword').value;
-
-            if (password !== confirm) {
-                UI.showAlert('Password tidak cocok!', 'danger');
-                return;
-            }
-
-            const result = AuthManager.register(name, email, password);
-            if (result.success) {
-                UI.showAlert('Registrasi berhasil! Silakan login.', 'success');
-                setTimeout(() => {
-                    UI.showPage('loginPage');
-                    document.getElementById('registerForm').reset();
-                }, 1000);
-            } else {
-                UI.showAlert(result.message, 'danger');
-            }
-        });
-
-        document.getElementById('expenseForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const expense = {
-                category: document.getElementById('expenseCategory').value,
-                amount: document.getElementById('expenseAmount').value,
-                note: document.getElementById('expenseNote').value,
-                date: document.getElementById('expenseDate').value
-            };
-
-            const editingId = document.getElementById('submitBtn').dataset.editId;
-
-            if (editingId) {
-                ExpenseManager.updateExpense(parseInt(editingId), expense);
-                delete document.getElementById('submitBtn').dataset.editId;
-                document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save me-2"></i>Simpan';
-                UI.showAlert('Pengeluaran berhasil diupdate!', 'success');
-            } else {
-                ExpenseManager.addExpense(expense);
-                UI.showAlert('Pengeluaran berhasil ditambahkan!', 'success');
-            }
-
-            document.getElementById('expenseForm').reset();
-            document.getElementById('expenseDate').valueAsDate = new Date();
-            UI.renderExpenses();
-        });
-
-        document.getElementById('profileForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const name = document.getElementById('profileNameInput').value;
-            const email = document.getElementById('profileEmailInput').value;
-
-            if (AuthManager.updateProfile(name, email)) {
-                UI.showAlert('Profile berhasil diupdate!', 'success');
-                UI.updateUserInfo();
-                UI.showAppSection('mainPage');
-            }
-        });
-
-        document.getElementById('showRegister').addEventListener('click', (e) => {
-            e.preventDefault();
-            UI.showPage('registerPage');
-        });
-
-        document.getElementById('showLogin').addEventListener('click', (e) => {
-            e.preventDefault();
-            UI.showPage('loginPage');
-        });
-
-        document.getElementById('logoutBtn').addEventListener('click', (e) => {
-            e.preventDefault();
-            if (confirm('Apakah Anda yakin ingin logout?')) {
-                AuthManager.logout();
-            }
-        });
-
-        document.getElementById('showProfile').addEventListener('click', (e) => {
-            e.preventDefault();
-            const session = AuthManager.getSession();
-            document.getElementById('profileAvatar').textContent = session.name.charAt(0).toUpperCase();
-            document.getElementById('profileName').textContent = session.name;
-            document.getElementById('profileEmail').textContent = session.email;
-            document.getElementById('profileNameInput').value = session.name;
-            document.getElementById('profileEmailInput').value = session.email;
-            UI.showAppSection('profilePage');
-        });
-
-        document.getElementById('backToMain').addEventListener('click', () => {
-            UI.showAppSection('mainPage');
-        });
-
-        // Global functions for expense actions
-        window.editExpense = function (id) {
-            const expenses = ExpenseManager.getExpenses();
-            const expense = expenses.find(e => e.id === id);
-            if (expense) {
-                document.getElementById('expenseCategory').value = expense.category;
-                document.getElementById('expenseAmount').value = expense.amount;
-                document.getElementById('expenseNote').value = expense.note || '';
-                document.getElementById('expenseDate').value = expense.date;
-                document.getElementById('submitBtn').dataset.editId = id;
-                document.getElementById('submitBtn').innerHTML = '<i class="fas fa-edit me-2"></i>Update';
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        };
-
-        window.deleteExpense = function (id) {
-            if (confirm('Apakah Anda yakin ingin menghapus pengeluaran ini?')) {
-                ExpenseManager.deleteExpense(id);
-                UI.showAlert('Pengeluaran berhasil dihapus!', 'success');
-                UI.renderExpenses();
-            }
-        };
-
-        // Initialize
-        document.getElementById('expenseDate').valueAsDate = new Date();
-
-        const session = AuthManager.getSession();
-        if (session && session.remember) {
-            UI.showPage('appContainer');
-            UI.updateUserInfo();
-            UI.renderExpenses();
-        }
-
-        // Service Worker Registration
+        // Register Service Worker
         if ('serviceWorker' in navigator) {
-            const swCode = `
-                const CACHE_NAME = 'notes-v1';
-                self.addEventListener('install', (e) => {
-                    e.waitUntil(
-                        caches.open(CACHE_NAME).then(cache => cache.addAll(['/']))
-                    );
-                });
-                self.addEventListener('fetch', (e) => {
-                    e.respondWith(
-                        caches.match(e.request).then(response => response || fetch(e.request))
-                    );
-                });
-            `;
-            const blob = new Blob([swCode], { type: 'application/javascript' });
-            const swURL = URL.createObjectURL(blob);
-            navigator.serviceWorker.register(swURL);
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('SW registered'))
+                    .catch(err => console.log('SW registration failed', err));
+            });
         }
-
-        // Create manifest
-        const manifest = {
-            name: 'Notes - Pencatatan Pengeluaran',
-            short_name: 'Notes',
-            description: 'Aplikasi pencatatan pengeluaran harian untuk mahasiswa',
-            start_url: '/',
-            display: 'standalone',
-            background_color: '#6366f1',
-            theme_color: '#6366f1',
-            icons: [
-                {
-                    src: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%236366f1" width="100" height="100" rx="20"/><text x="50" y="70" font-size="60" text-anchor="middle" fill="white" font-family="Arial">💰</text></svg>',
-                    sizes: '512x512',
-                    type: 'image/svg+xml'
-                }
-            ]
-        };
-
-        const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
-        const manifestURL = URL.createObjectURL(manifestBlob);
-        document.getElementById('manifest-placeholder').setAttribute('href', manifestURL);
     </script>
 </body>
 
