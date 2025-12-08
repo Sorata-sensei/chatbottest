@@ -7,8 +7,12 @@ const urlsToCache = [
   `${BASE_URL}offline.html`,
   `${BASE_URL}assets/style.css`,
   `${BASE_URL}manifest.json`,
-  `${BASE_URL}icons/icon-192x192.png`,
-  `${BASE_URL}icons/icon-512x512.png`,
+  `${BASE_URL}icons/android-launchericon-48-48.png`,
+  `${BASE_URL}icons/android-launchericon-72-72.png`,
+  `${BASE_URL}icons/android-launchericon-96-96.png`,
+  `${BASE_URL}icons/android-launchericon-144-144.png`,
+  `${BASE_URL}icons/android-launchericon-192-192.png`,  
+  `${BASE_URL}icons/android-launchericon-512-512.png`,
 ];
 
 // Install Service Worker & simpan file ke cache
